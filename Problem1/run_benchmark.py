@@ -62,19 +62,19 @@ setClusterFreq(0, 200000)
 print getClusterFreq(0)
 setClusterFreq(4, 2000000)
 print getClusterFreq(4)
-out_fname = "problem1-1.txt"
-header = "time V A W W/h usage_c0 usage_c1 usage_c2 usage_c3 usage_c4 usage_c5 usage_c6 usage_c7 temp_c4 temp_c5 temp_c6 temp_c7"
+out_fname = "problem1-3_bodytrack.txt"
+header = "time V A W W/h usage_c0 usage_c1 usage_c2 usage_c3 usage_c4 usage_c5 usage_c6 usage_c7 temp_c4 temp_c5 temp_c6 temp_c7, frequency"
 header = "\t".join(header.split(' '))
 out_file = open(out_fname, 'w')
 out_file.write(header)
 out_file.write('\n')
-command = "taskset --all-tasks 0x10 ./TPBench.exe"
+#command = "taskset --all-tasks 0xF0 blackscholes 1 in_10M_blackscholes.txt blackscholes_out.txt"
 
 DELAY = 0.2
 SP2_tel = tel.Telnet('192.168.4.1')
 total_power = 0.0
-subprocess.Popen(command.split(' '))
-for i in range(600):
+#subprocess.Popen(command.split(' '))
+for i in range(6000):
     start = time.time()
     
     total_power = getTelnetPower(SP2_tel, total_power)
@@ -82,14 +82,15 @@ for i in range(600):
     
     usage = getCpuLoad()
     print("usage: ", usage)
-    
+    freq = getClusterFreq(4)
+    print("freq: ", freq)
     temps = getTemps()
     print("temps: ", temps)
     time_stamp = start
-    fmt_str = '{}\t'*14
+    fmt_str = '{}\t'*15
     out = fmt_str.format(time_stamp, total_power, usage[0], usage[1],\
     usage[2], usage[3], usage[4], usage[5], usage[6],usage[7],\
-    temps[0], temps[1], temps[2], temps[3])
+    temps[0], temps[1], temps[2], temps[3], freq)
     out_file.write(out)
     out_file.write('\n')
     elapsed = time.time()-start
