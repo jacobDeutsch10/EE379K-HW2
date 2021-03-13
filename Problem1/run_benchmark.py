@@ -74,7 +74,7 @@ DELAY = 0.2
 SP2_tel = tel.Telnet('192.168.4.1')
 total_power = 0.0
 #subprocess.Popen(command.split(' '))
-for i in range(6000):
+for i in range(2500):
     start = time.time()
     
     total_power = getTelnetPower(SP2_tel, total_power)
